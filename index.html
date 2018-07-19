@@ -264,8 +264,7 @@ which can create, modify, and delete lobbies for handling the lifecycle of rooms
 
 <p>We have language bindings in Shell! You can view code examples in the dark area to the right.</p>
 <h1 id='authentication'>Authentication</h1>
-<p>Game-A-Lot currently has no Authentication. In the future we hope to support API Keys to prevent
-other accessors from being able to modify your lobbies.</p>
+<p>Game-A-Lot currently has no Authentication. In the future we hope to support API Keys to prevent others from being able to modify your lobbies.</p>
 
 <aside class="notice">
 Authentication will be added to Game-A-Lot lobby APIs shortly
@@ -287,7 +286,7 @@ Authentication will be added to Game-A-Lot lobby APIs shortly
    </span><span class="s2">"statusCode"</span><span class="p">:</span><span class="mi">200</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>This endpoint creates a lobby and returns the created lobby.</p>
+<p>This endpoint creates a lobby and returns the created lobby. The lobbyID is a randomly generated String of case sensitive alpha numeric characters.</p>
 <h3 id='http-request'>HTTP Request</h3>
 <p><code>POST https://gb7h15dz05.execute-api.us-east-1.amazonaws.com/prod/lobby</code></p>
 <h2 id='get-a-lobby'>Get a Lobby</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://gb7h15dz05.execute-api.us-east-1.amazonaws.com/prod/lobby/VL8v68"</span>
@@ -402,6 +401,10 @@ Authentication will be added to Game-A-Lot lobby APIs shortly
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <p>This endpoint puts a user into a lobby provided that the lobby is open.</p>
+
+<aside class="warning">
+A lobby that is not open will not accept new users.
+</aside>
 <h3 id='http-request-5'>HTTP Request</h3>
 <p><code>PUT &quot;https://gb7h15dz05.execute-api.us-east-1.amazonaws.com/prod/lobby/&lt;lobbyID&gt;/user/&lt;userID&gt;&quot;</code></p>
 <h3 id='url-parameters-4'>URL Parameters</h3>
