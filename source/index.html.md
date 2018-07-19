@@ -22,8 +22,7 @@ We have language bindings in Shell! You can view code examples in the dark area 
 
 # Authentication
 
-Game-A-Lot currently has no Authentication. In the future we hope to support API Keys to prevent
-other accessors from being able to modify your lobbies.
+Game-A-Lot currently has no Authentication. In the future we hope to support API Keys to prevent others from being able to modify your lobbies.
 
 <aside class="notice">
 Authentication will be added to Game-A-Lot lobby APIs shortly
@@ -53,7 +52,7 @@ curl "https://gb7h15dz05.execute-api.us-east-1.amazonaws.com/prod/lobby"
 }
 ```
 
-This endpoint creates a lobby and returns the created lobby.
+This endpoint creates a lobby and returns the created lobby. The lobbyID is a randomly generated String of case sensitive alpha numeric characters.
 
 ### HTTP Request
 
@@ -175,6 +174,10 @@ curl "https://gb7h15dz05.execute-api.us-east-1.amazonaws.com/prod/lobby/IIB9xP/u
 ```
 
 This endpoint puts a user into a lobby provided that the lobby is open.
+
+<aside class="warning">
+A lobby that is not open will not accept new users.
+</aside>
 
 ### HTTP Request
 
