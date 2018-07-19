@@ -3,12 +3,8 @@ title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - shell
-  - ruby
-  - python
-  - javascript
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
   - <a href='https://github.com/lord/slate'>Documentation Powered by Slate</a>
 
 includes:
@@ -19,221 +15,210 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Welcome to the Game-A-Lot API! You can use our API to access Game-A-Lot Lobby API endpoints,
+which can create, modify, and delete lobbies for handling the lifecycle of rooms in your games.
 
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
-
-This example API documentation page was created with [Slate](https://github.com/lord/slate). Feel free to edit it and use it as a base for your own API's documentation.
+We have language bindings in Shell! You can view code examples in the dark area to the right.
 
 # Authentication
 
-> To authorize, use this code:
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
-
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
+Game-A-Lot currently has no Authentication. In the future we hope to support API Keys to prevent
+other accessors from being able to modify your lobbies.
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+Authentication will be added to Game-A-Lot lobby APIs shortly
 </aside>
 
-# Kittens
+# Lobbies
 
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
+## Create a Lobby
 
 ```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
+curl "https://gb7h15dz05.execute-api.us-east-1.amazonaws.com/prod/lobby"
+  -X POST
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
+{
+   "data":{
+      "lobbyID":"VL8v68",
+      "users":{
+
+      },
+      "isOpen":true
+   },
+   "statusCode":200
+}
 ```
 
-This endpoint retrieves all kittens.
+This endpoint creates a lobby and returns the created lobby.
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
+`POST https://gb7h15dz05.execute-api.us-east-1.amazonaws.com/prod/lobby`
+
+## Get a Lobby
+
+```shell
+curl "https://gb7h15dz05.execute-api.us-east-1.amazonaws.com/prod/lobby/VL8v68"
+  -X GET
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+   "data":{
+      "lobbyID":"VL8v68",
+      "users":[
+         "TJ",
+         "Graham",
+         "Nate",
+         "Broc"
+      ],
+      "isOpen":true
+   },
+   "statusCode":200
+}
+```
+
+This endpoint retrieves a specific lobby.
+
+### HTTP Request
+
+`GET https://gb7h15dz05.execute-api.us-east-1.amazonaws.com/prod/lobby/<lobbyID>`
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+lobbyID | The ID of the lobby to retrieve
+
+## Delete a Lobby
+
+```shell
+curl "https://gb7h15dz05.execute-api.us-east-1.amazonaws.com/prod/lobby/4AmFs6"
+  -X DELETE
+```
+
+> The above command has no response
+
+This endpoint deletes a specific lobby.
+
+### HTTP Request
+
+`DELETE https://gb7h15dz05.execute-api.us-east-1.amazonaws.com/prod/lobby/<lobbyID>`
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+lobbyID | The ID of the lobby to delete
+
+
+## Open or Close a Lobby
+
+```shell
+curl "https://gb7h15dz05.execute-api.us-east-1.amazonaws.com/prod/lobby/IIB9xP/status\?open\=0"
+  -X PUT
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+   "data":"False",
+   "statusCode":200
+}
+```
+
+This endpoint sets the status of the lobby. The status of the lobby determines the ability for users to join a specific lobby. An open lobby will accept new users who join the lobby. A lobby that is not open will reject users attempting to join the lobby.
+
+### HTTP Request
+
+`PUT "https://gb7h15dz05.execute-api.us-east-1.amazonaws.com/prod/lobby/<lobbyID>/status?open\=<isOpen>"`
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+lobbyID | The ID of the lobby for which the status will be updated
 
 ### Query Parameters
 
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+Parameter | Description
+--------- | -----------
+isOpen | The new status for the lobby. If set to `y`, `yes`, `t`, `true`, `on`, or `1`, sets the lobby to open. If set to `n`, `no`, `f`, `false`, `off`, or `0`, sets the lobby to closed.
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
 
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
+## Add a user to a Lobby
 
 ```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
+curl "https://gb7h15dz05.execute-api.us-east-1.amazonaws.com/prod/lobby/IIB9xP/user/TJ"
+  -X PUT
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+   "data":[
+      "TJ",
+      "Graham",
+      "Nate",
+      "Broc"
+   ],
+   "statusCode":200
 }
 ```
 
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+This endpoint puts a user into a lobby provided that the lobby is open.
 
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`PUT "https://gb7h15dz05.execute-api.us-east-1.amazonaws.com/prod/lobby/<lobbyID>/user/<userID>"`
 
 ### URL Parameters
 
 Parameter | Description
 --------- | -----------
-ID | The ID of the kitten to retrieve
+lobbyID | The ID of the lobby in which to add the user
+userID  | The user to add to the lobby
 
-## Delete a Specific Kitten
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
+## Remove a user from a Lobby
 
 ```shell
-curl "http://example.com/api/kittens/2"
+curl "https://gb7h15dz05.execute-api.us-east-1.amazonaws.com/prod/lobby/IIB9xP/user/BadPlayer"
   -X DELETE
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "deleted" : ":("
+   "data":[
+      "TJ",
+      "Graham",
+      "Nate",
+      "Broc"
+   ],
+   "statusCode":200
 }
 ```
 
-This endpoint deletes a specific kitten.
+This endpoint removes a user from the specified lobby.
+
 
 ### HTTP Request
 
-`DELETE http://example.com/kittens/<ID>`
+`DELETE "https://gb7h15dz05.execute-api.us-east-1.amazonaws.com/prod/lobby/<lobbyID>/user/<userID>"`
 
 ### URL Parameters
 
 Parameter | Description
 --------- | -----------
-ID | The ID of the kitten to delete
-
+lobbyID | The ID of the lobby in which to add the user
+userID  | The user to add to the lobby
